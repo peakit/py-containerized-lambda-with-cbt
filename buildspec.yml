@@ -5,10 +5,6 @@ phases:
        python: 3.11
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 323021871338.dkr.ecr.us-east-1.amazonaws.com
-      - echo "Login completed"
-      - aws sts get-caller-identity
       - python3 --version
       - pip3 install --upgrade pip
       - pip3 install --upgrade awscli
@@ -23,6 +19,7 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 323021871338.dkr.ecr.us-east-1.amazonaws.com
       - echo Pushing the Docker image...
       - docker tag py-containerized-lambda-with-cbt:$CODEBUILD_BUILD_NUMBER 323021871338.dkr.ecr.us-east-1.amazonaws.com/py-containerized-lambda-with-cbt:$CODEBUILD_BUILD_NUMBER
       - docker push 323021871338.dkr.ecr.us-east-1.amazonaws.com/py-containerized-lambda-with-cbt:$CODEBUILD_BUILD_NUMBER
