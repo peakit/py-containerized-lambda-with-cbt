@@ -1,0 +1,25 @@
+phases:
+  install:
+    runtime-versions:
+       python: 3.11
+  pre_build:
+    commands:
+      - python3 --version
+      - pip3 install --upgrade pip
+      - pip3 install --upgrade awscli
+      - sudo docker info
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - ls
+      - cd app
+      - docker build -t py-containerized-lambda-with-cbt:$CODEBUILD_BUILD_NUMBER .
+      - docker container ls
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 323021871338.dkr.ecr.us-east-1.amazonaws.com
+      - docker tag py-containerized-lambda-with-cbt:$CODEBUILD_BUILD_NUMBER 323021871338.dkr.ecr.us-east-1.amazonaws.com/py-containerized-lambda-with-cbt:$CODEBUILD_BUILD_NUMBER
+      - docker push 323021871338.dkr.ecr.us-east-1.amazonaws.com/py-containerized-lambda-with-cbt:$CODEBUILD_BUILD_NUMBER
