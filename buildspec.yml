@@ -14,7 +14,6 @@ phases:
       - echo Build started on `date`
       - echo Building the Docker image...
       - ls
-      - cd app
       - docker build -t py-containerized-lambda-with-cbt:$CODEBUILD_BUILD_NUMBER .
       - docker container ls
   post_build:
